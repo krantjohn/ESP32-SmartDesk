@@ -1,7 +1,7 @@
 #pragma once
 
 // ==========================================
-// 1. I2C 引脚定义 (OLED & SHT30)
+// 1. I2C 引脚定义 (OLED 屏幕 & SHT30 传感器)
 // ==========================================
 #define I2C_SDA_PIN 5
 #define I2C_SCL_PIN 4
@@ -22,16 +22,17 @@
 #define ENC_SW_PIN 37
 
 // ==========================================
-// 4. WiFi 连接配置
+// 4. WiFi 连接配置 (请替换为实际 WiFi 凭据)
 // ==========================================
-#define DEFAULT_WIFI_SSID "CMCC-PEQ4"
-#define DEFAULT_WIFI_PASS "12345678"
+#define DEFAULT_WIFI_SSID "YOUR_WIFI_SSID"
+#define DEFAULT_WIFI_PASS "YOUR_WIFI_PASSWORD"
 
 // ==========================================
 // 5. 天气 API 配置 (聚合数据 simpleWeather)
+// 申请地址: https://www.juhe.cn/docs/api/id/73
 // ==========================================
-#define WEATHER_CITY "枣强"
-#define WEATHER_API_KEY "3960a914d88cf4838b1f5baecfa3c6b9"
+#define WEATHER_CITY "YOUR_CITY"
+#define WEATHER_API_KEY "YOUR_JUHE_API_KEY"
 #define WEATHER_API_URL "https://apis.juhe.cn/simpleWeather/query?city=" WEATHER_CITY "&key=" WEATHER_API_KEY
 
 // ==========================================

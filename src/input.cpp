@@ -2,16 +2,7 @@
 
 #include "input.h"
 #include "page.h"
-
-
-#define KEY_UP 9
-#define KEY_DOWN 10
-#define KEY_OK 11
-#define KEY_BACK 12
-
-#define ENC_A 35
-#define ENC_B 36
-#define ENC_SW 37
+#include "config.h"
 
 volatile int encoderValue = 0;
 
@@ -27,18 +18,16 @@ int8_t table[16] =
 
 void encoderUpdate();
 
-
 void inputInit()
 {
-    pinMode(KEY_UP, INPUT_PULLUP);
-    pinMode(KEY_DOWN, INPUT_PULLUP);
-    pinMode(KEY_OK, INPUT_PULLUP);
-    pinMode(KEY_BACK,INPUT_PULLUP);
-    pinMode(ENC_A ,INPUT_PULLUP);
-    pinMode(ENC_B ,INPUT_PULLUP);
+    pinMode(KEY_UP_PIN, INPUT_PULLUP);
+    pinMode(KEY_DOWN_PIN, INPUT_PULLUP);
+    pinMode(KEY_OK_PIN, INPUT_PULLUP);
+    pinMode(KEY_BACK_PIN, INPUT_PULLUP);
+    pinMode(ENC_A_PIN, INPUT_PULLUP);
+    pinMode(ENC_B_PIN, INPUT_PULLUP);
 
-    lastA = digitalRead(ENC_A);
-
+    lastA = digitalRead(ENC_A_PIN);
 }
 
 
@@ -65,13 +54,10 @@ void inputUpdate()
     static bool lastOK=HIGH;
     static bool lastBack=HIGH;
 
-    bool up = digitalRead(KEY_UP);
-
-    bool down = digitalRead(KEY_DOWN);
-
-    bool ok = digitalRead(KEY_OK);
-
-    bool back = digitalRead(KEY_BACK);
+    bool up = digitalRead(KEY_UP_PIN);
+    bool down = digitalRead(KEY_DOWN_PIN);
+    bool ok = digitalRead(KEY_OK_PIN);
+    bool back = digitalRead(KEY_BACK_PIN);
 
 
 
@@ -108,11 +94,6 @@ void inputUpdate()
     lastDown = down;
     lastOK = ok;
     lastBack = back;
-
-
-    
-
-
 }
 
 void encoderUpdate()
@@ -123,8 +104,8 @@ void encoderUpdate()
 
     uint8_t state = 0;
 
-    state |= digitalRead(ENC_A)<<1;
-    state |= digitalRead(ENC_B);
+    state |= digitalRead(ENC_A_PIN)<<1;
+    state |= digitalRead(ENC_B_PIN);
 
 
     uint8_t index = (oldState << 2) | state;

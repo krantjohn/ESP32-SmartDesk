@@ -2,10 +2,10 @@
 #include <Arduino.h>
 #include "wifilink.h"
 #include "system_state.h"
+#include "config.h"
 
-
-const char* ssid = "CMCC-PEQ4";
-const char* password = "12345678";
+const char* ssid = DEFAULT_WIFI_SSID;
+const char* password = DEFAULT_WIFI_PASS;
 
 
 

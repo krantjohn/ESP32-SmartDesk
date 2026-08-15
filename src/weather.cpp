@@ -3,9 +3,10 @@
 #include <ArduinoJson.h>
 #include "weather.h"
 #include "system_state.h"
+#include "config.h"
 #include <WiFi.h>
 
-const char* url = "https://apis.juhe.cn/simpleWeather/query?city=枣强&key=3960a914d88cf4838b1f5baecfa3c6b9";
+const char* url = WEATHER_API_URL;
 
 
 void weatherInit(){

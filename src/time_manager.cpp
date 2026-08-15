@@ -2,11 +2,11 @@
 #include <Arduino.h>
 #include "time.h"
 #include "system_state.h"
+#include "config.h"
 
-
-const char* ntpSever = "pool.ntp.org";
-const long gmtOffset = 8 * 3600;
-const int daylighhtOffset_sec = 0;
+const char* ntpSever = NTP_SERVER;
+const long gmtOffset = GMT_OFFSET_SEC;
+const int daylighhtOffset_sec = DAYLIGHT_OFFSET_SEC;
 
 void timeInit(){
     //设置时区偏移和NTP服务器

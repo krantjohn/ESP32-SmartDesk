@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "Wire.h"
 #include "U8g2lib.h"
+#include "config.h"
 #include "display.h"
 #include "sensor.h"
 #include "wifilink.h"
@@ -11,26 +12,22 @@
 #include "page.h"
 #include "input.h"
 
-#define SCL 4
-#define SDA 5
-
 unsigned long sensorTimer = 0;
 unsigned long timeTimer = 0;
 unsigned long displayTimer = 0;
 unsigned long wifiTimer = 0;
-unsigned long weatherTimer=0;
-unsigned long inputTimer=0;
+unsigned long weatherTimer = 0;
+unsigned long inputTimer = 0;
 
 bool timeReady = false;
 bool weatherReady = false;
 
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0 ,U8X8_PIN_NONE);
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);
 
-void setup(){
-
+void setup() {
   Serial.begin(115200);
 
-  Wire.begin(SDA ,SCL);
+  Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   
   displayInit();
 

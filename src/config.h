@@ -24,22 +24,22 @@
 // ==========================================
 // 4. WiFi 连接配置 (请替换为实际 WiFi 凭据)
 // ==========================================
-#define DEFAULT_WIFI_SSID "YOUR_WIFI_SSID"
-#define DEFAULT_WIFI_PASS "YOUR_WIFI_PASSWORD"
+#define DEFAULT_WIFI_SSID "CMCC-PEQ4"
+#define DEFAULT_WIFI_PASS "12345678"
 
 // ==========================================
 // 5. 天气 API 配置 (默认地区: 衡水)
 // 申请地址: https://www.juhe.cn/docs/api/id/73
 // ==========================================
 #define WEATHER_CITY "衡水"
-#define WEATHER_API_KEY "YOUR_JUHE_API_KEY"
+#define WEATHER_API_KEY "3960a914d88cf4838b1f5baecfa3c6b9"
 #define WEATHER_API_URL "https://apis.juhe.cn/simpleWeather/query?city=" WEATHER_CITY "&key=" WEATHER_API_KEY
 
 // ==========================================
 // 6. 云端服务器上报配置 (智能桌面数据大屏)
 // ==========================================
 // 请将 YOUR_SERVER_IP 替换为您云服务器的真实公网 IP 或域名
-#define SERVER_UPLOAD_URL "http://YOUR_SERVER_IP:5000/api/report"
+#define SERVER_UPLOAD_URL "http://35.200.51.175:5000/api/report"
 #define SERVER_UPLOAD_INTERVAL_MS 5000  // 上报间隔时间 (毫秒)，默认 5 秒
 
 // ==========================================

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // ==========================================
 // 1. I2C 引脚定义 (OLED 屏幕 & SHT30 传感器)
@@ -28,15 +28,22 @@
 #define DEFAULT_WIFI_PASS "YOUR_WIFI_PASSWORD"
 
 // ==========================================
-// 5. 天气 API 配置 (聚合数据 simpleWeather)
+// 5. 天气 API 配置 (默认地区: 衡水)
 // 申请地址: https://www.juhe.cn/docs/api/id/73
 // ==========================================
-#define WEATHER_CITY "YOUR_CITY"
+#define WEATHER_CITY "衡水"
 #define WEATHER_API_KEY "YOUR_JUHE_API_KEY"
 #define WEATHER_API_URL "https://apis.juhe.cn/simpleWeather/query?city=" WEATHER_CITY "&key=" WEATHER_API_KEY
 
 // ==========================================
-// 6. NTP 网络授时配置
+// 6. 云端服务器上报配置 (智能桌面数据大屏)
+// ==========================================
+// 请将 YOUR_SERVER_IP 替换为您云服务器的真实公网 IP 或域名
+#define SERVER_UPLOAD_URL "http://YOUR_SERVER_IP:5000/api/report"
+#define SERVER_UPLOAD_INTERVAL_MS 5000  // 上报间隔时间 (毫秒)，默认 5 秒
+
+// ==========================================
+// 7. NTP 网络授时配置
 // ==========================================
 #define NTP_SERVER "pool.ntp.org"
 #define GMT_OFFSET_SEC (8 * 3600)  // 东八区北京时间 (UTC+8)

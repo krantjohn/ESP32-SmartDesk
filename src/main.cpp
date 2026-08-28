@@ -1,4 +1,4 @@
-#include <Arduino.h>
+﻿#include <Arduino.h>
 #include "Wire.h"
 #include "U8g2lib.h"
 #include "config.h"
@@ -11,6 +11,7 @@
 #include "menu.h"
 #include "page.h"
 #include "input.h"
+#include "uploader.h"
 
 unsigned long sensorTimer = 0;
 unsigned long timeTimer = 0;
@@ -18,6 +19,7 @@ unsigned long displayTimer = 0;
 unsigned long wifiTimer = 0;
 unsigned long weatherTimer = 0;
 unsigned long inputTimer = 0;
+unsigned long uploadTimer = 0;
 
 bool timeReady = false;
 bool weatherReady = false;
@@ -38,76 +40,63 @@ void setup() {
   menuInit();
 
   inputInit();
+
+  uploaderInit();
 }
 
-
 void loop(){
-
-  
   unsigned long now = millis();
 
   if(now - wifiTimer > 10000){
-
     wifiTimer = now;
-    
     wifiUpdate();
   }
 
   if(systemState.wifiOK && !timeReady)
   {
     timeInit();
-  
     timeReady = true;
-
   }
 
   if(systemState.wifiOK && !weatherReady)
   {
     updateWeather();
-
-    weatherReady=true;
-
+    weatherReady = true;
   }
 
   if(now - sensorTimer >= 2000){
-
     sensorTimer = now;
-
     updateSensor();
   }
 
   if(systemState.wifiOK){
-
     if(now - timeTimer >= 1000){
-
-    timeTimer = now;
-
-    updateTime();
-  }
+      timeTimer = now;
+      updateTime();
+    }
   }
 
   if(now - weatherTimer >= 1800000){
-
     weatherTimer = now;
-
     updateWeather();
   }
 
-  if(now-inputTimer>=20)
+  if(now - inputTimer >= 20)
   {
-
-    inputTimer=now;
-
+    inputTimer = now;
     inputUpdate();
-
   }
-
 
   if(now - displayTimer >= 100){
-
     displayTimer = now;
-
     pageUpdate();
   }
-  
+
+  // 云端数据上报调度 (5秒一次)
+  if(systemState.wifiOK) {
+    if(now - uploadTimer >= SERVER_UPLOAD_INTERVAL_MS) {
+      uploadTimer = now;
+      uploadDataNow();
+    }
+  }
 }

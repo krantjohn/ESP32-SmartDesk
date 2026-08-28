@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 ====================================================================
@@ -17,7 +17,10 @@ import sqlite3
 import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# 东八区北京时间时区定义 (UTC+8)
+BEIJING_TZ = timezone(timedelta(hours=8))
 
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 5000
 DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "smartdesk_data.db")
@@ -466,14 +469,14 @@ class SmartDeskHandler(BaseHTTPRequestHandler):
             conn.close()
 
             rows.reverse()
-            times = [r[0] if r[0] else datetime.now().strftime("%H:%M:%S") for r in rows]
+            times = [r[0] if r[0] else datetime.now(BEIJING_TZ).strftime("%H:%M:%S") for r in rows]
             indoor_temps = [r[1] for r in rows]
             indoor_hums = [r[2] for r in rows]
             outdoor_temps = [r[3] for r in rows]
 
             # 初始空数据垫底
             if not times:
-                now_str = datetime.now().strftime("%H:%M:%S")
+                now_str = datetime.now(BEIJING_TZ).strftime("%H:%M:%S")
                 times = [now_str]
                 indoor_temps = [latest_state["indoor_temp"]]
                 indoor_hums = [latest_state["indoor_hum"]]
@@ -504,7 +507,13 @@ class SmartDeskHandler(BaseHTTPRequestHandler):
                 outdoor_temp = float(data.get("outdoor_temp", 0.0))
                 outdoor_hum = float(data.get("outdoor_hum", 0.0))
                 weather = str(data.get("weather", "晴"))
-                reported_time = datetime.now().strftime("%H:%M:%S")
+                
+                # 优先提取 ESP32 硬件端上报的 NTP 北京时间 (格式 "YYYY-MM-DD HH:MM:SS")
+                esp_ts = str(data.get("timestamp", ""))
+                if esp_ts and len(esp_ts) >= 19 and "ERROR" not in esp_ts:
+                    reported_time = esp_ts[11:19]  # 提取 "HH:MM:SS"
+                else:
+                    reported_time = datetime.now(BEIJING_TZ).strftime("%H:%M:%S")
 
                 latest_state["indoor_temp"] = indoor_temp
                 latest_state["indoor_hum"] = indoor_hum
@@ -524,6 +533,7 @@ class SmartDeskHandler(BaseHTTPRequestHandler):
                 """, ("ESP32S3_SmartDesk", indoor_temp, indoor_hum, city, outdoor_temp, outdoor_hum, weather, reported_time))
                 conn.commit()
                 conn.close()
+
 
                 self._set_headers()
                 self.wfile.write(json.dumps({"status": "success", "message": "Telemetry received"}, ensure_ascii=False).encode("utf-8"))

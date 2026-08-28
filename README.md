@@ -18,7 +18,10 @@
 - **🎛️ 双模交互输入系统 (按键 + 旋转编码器)**：
   - **4 按键支持**：上翻 (UP)、下翻 (DOWN)、确认 (OK)、返回 (BACK)；
   - **EC11 旋转编码器支持**：内置 16 状态正交编码状态机，支持顺逆时针无级旋钮平滑翻页与导航。
-- **⚙️ 集中化参数配置 (`src/config.h`)**：引脚定义、WiFi 凭据、API 密钥、授时服务器统一管理，结构清晰。
+- **📊 云端大屏联动与时序遥测 (`server/smartdesk_server.py`)**：
+  - ESP32-S3 硬件端定时（默认 5s）通过 HTTP POST 自动将传感器温湿度、天气、状态与授时上报至云端中枢；
+  - 配套 **零依赖、极轻量** 的 Python 原生 Web 数据大屏，支持暗黑极客风可视化 UI、实时折线图走势、硬件在线心跳监测以及 SQLite 历史数据持久化存储。
+- **⚙️ 集中化参数配置 (`src/config.h`)**：引脚定义、WiFi 凭据、API 密钥、云端上报 URL、授时服务器统一管理，结构清晰。
 
 ---
 
@@ -80,11 +83,14 @@ SmartDesk/
 ├── platformio.ini          # PlatformIO 构建与库依赖配置
 ├── README.md               # 项目详细说明文档
 ├── LICENSE                 # MIT 开源协议
+├── server/                 # 云端大屏与数据中枢 (Python 原生轻量服务)
+│   └── smartdesk_server.py # 独立 Web 大屏服务 (SQLite + REST API + 极客仪表盘)
 ├── include/                # 头文件目录
 └── src/
-    ├── config.h            # 全局引脚、WiFi、天气 API 等集中配置
+    ├── config.h            # 全局引脚、WiFi、天气 API、云端上报等集中配置
     ├── main.cpp            # 主循环任务调度与定时器轮询
     ├── system_state.h/.cpp # 全局状态单例 (SystemState)
+    ├── uploader.h/.cpp     # ESP32 云端数据上报模块 (HTTPClient + JSON)
     ├── display.h/.cpp      # U8g2 OLED 页面渲染与文字排版
     ├── page.h/.cpp         # 页面导航与状态机跳转控制
     ├── menu.h/.cpp         # 菜单条目与高亮游标渲染
@@ -100,7 +106,7 @@ SmartDesk/
 ## 🚀 快速上手 (Getting Started)
 
 ### 1. 配置个人凭据
-在编译前，打开 [`src/config.h`](src/config.h) 修改你的 WiFi 与天气 API 配置：
+在编译前，打开 [`src/config.h`](src/config.h) 修改你的 WiFi、天气 API 及云端上报配置：
 
 ```cpp
 // 1. 设置 WiFi 账号密码
@@ -108,19 +114,32 @@ SmartDesk/
 #define DEFAULT_WIFI_PASS "你的WiFi密码"
 
 // 2. 设置天气城市与 API Key (可在聚合数据免费申请)
-#define WEATHER_CITY      "北京"
+#define WEATHER_CITY      "衡水"
 #define WEATHER_API_KEY   "你的聚合数据API_KEY"
+
+// 3. 设置云端数据大屏上报地址 (支持公网服务器 IP/域名 或 本地电脑局域网 IP)
+#define SERVER_UPLOAD_URL "http://YOUR_SERVER_IP:5000/api/report"
+#define SERVER_UPLOAD_INTERVAL_MS 5000
 ```
 
-### 2. 编译与烧录
+### 2. 编译与烧录固件
 1. 使用 VS Code 打开 `SmartDesk` 目录；
 2. 安装 PlatformIO 扩展；
 3. 点击底部状态栏的 **Build (✓)** 编译，连接 ESP32-S3 开发板后点击 **Upload (→)** 烧录。
+
+### 3. 启动云端数据大屏 (可选)
+在云服务器或本地电脑上运行大屏服务（纯 Python 标准库，零安装依赖）：
+```bash
+# 启动服务 (默认端口 5000，可自定义)
+python3 server/smartdesk_server.py 5000
+```
+启动后在浏览器打开 `http://<服务器IP>:5000` 即可实时查看桌面终端的温湿度折线、天气同步状态与硬件心跳！
 
 ---
 
 ## 🔮 后续规划 (Roadmap)
 
+- [x] **云端 Web 数据大屏与时序存储**：ESP32 实时遥测数据 HTTP 上报与仪表盘展示。
 - [ ] **FreeRTOS 多任务重构**：将传感器读取、天气 HTTP 请求与 UI 渲染迁移至 FreeRTOS 独立 Task。
 - [ ] **WebServer 网页配网**：支持开机 AP 模式 Web 网页配置 WiFi 与城市，无需重新编译固件。
 - [ ] **番茄钟 / 倒计时小工具**：增加专注时钟与蜂鸣器提醒。
@@ -131,3 +150,4 @@ SmartDesk/
 ## 📄 开源协议
 
 本项目采用 [MIT License](LICENSE) 开源。
+

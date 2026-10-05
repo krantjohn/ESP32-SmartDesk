@@ -1,6 +1,8 @@
 # ESP32-S3 SmartDesk (智能桌面多功能小终端) 🖥️
 
 <p align="center">
+  <a href="README_EN.md"><img src="https://img.shields.io/badge/Language-English-blue?style=flat-square" alt="English Documentation"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/语言-简体中文-red?style=flat-square" alt="中文文档"></a>
   <a href="https://www.espressif.com/en/products/socs/esp32-s3"><img src="https://img.shields.io/badge/SoC-ESP32--S3-E7352C?logo=espressif&logoColor=white&style=flat-square" alt="ESP32-S3"></a>
   <a href="https://www.freertos.org/"><img src="https://img.shields.io/badge/RTOS-FreeRTOS-brightgreen?style=flat-square" alt="FreeRTOS"></a>
   <a href="https://platformio.org/"><img src="https://img.shields.io/badge/PlatformIO-Compatible-orange?logo=platformio&logoColor=white&style=flat-square" alt="PlatformIO"></a>
@@ -85,23 +87,23 @@
 ```mermaid
 stateDiagram-v2
     [*] --> HOME_PAGE: 系统开机
-    
+
     HOME_PAGE --> MENU_PAGE: 按下 KEY_OK
     MENU_PAGE --> HOME_PAGE: 按下 KEY_BACK
-    
+
     state MENU_PAGE {
         [*] --> 室内环境
         室内环境 --> 天气信息: 编码器顺时针 / KEY_DOWN
         天气信息 --> 系统状态: 编码器顺时针 / KEY_DOWN
         系统状态 --> 室内环境: 编码器顺时针 / KEY_DOWN
     }
-    
+
     MENU_PAGE --> SENSOR_PAGE: 选中 [室内环境] + KEY_OK
     SENSOR_PAGE --> MENU_PAGE: 按下 KEY_BACK
-    
+
     MENU_PAGE --> WEATHER_PAGE: 选中 [天气信息] + KEY_OK
     WEATHER_PAGE --> MENU_PAGE: 按下 KEY_BACK
-    
+
     MENU_PAGE --> SYSTEM_PAGE: 选中 [系统状态] + KEY_OK
     SYSTEM_PAGE --> MENU_PAGE: 按下 KEY_BACK
 ```
@@ -183,5 +185,3 @@ python3 server/smartdesk_server.py 5000
 ## 📄 开源协议
 
 本项目采用 [MIT License](LICENSE) 开源。
-
-
